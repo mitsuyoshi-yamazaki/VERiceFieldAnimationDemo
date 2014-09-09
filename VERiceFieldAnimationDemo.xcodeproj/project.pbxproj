@@ -24,6 +24,7 @@
 		2CE4281E19BE7D4F003CB25A /* DEMOMasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4281D19BE7D4F003CB25A /* DEMOMasterViewController.m */; };
 		2CE4282119BE7D78003CB25A /* DEMODetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4282019BE7D78003CB25A /* DEMODetailViewController.m */; };
 		2CE4282519BE833A003CB25A /* UINavigationController+Additions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4282419BE833A003CB25A /* UINavigationController+Additions.m */; };
+		2CE4282819BE845E003CB25A /* VERiceFieldTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE4282719BE845E003CB25A /* VERiceFieldTransition.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,8 @@
 		2CE4282019BE7D78003CB25A /* DEMODetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DEMODetailViewController.m; sourceTree = "<group>"; };
 		2CE4282319BE833A003CB25A /* UINavigationController+Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UINavigationController+Additions.h"; sourceTree = "<group>"; };
 		2CE4282419BE833A003CB25A /* UINavigationController+Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UINavigationController+Additions.m"; sourceTree = "<group>"; };
+		2CE4282619BE845E003CB25A /* VERiceFieldTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VERiceFieldTransition.h; sourceTree = "<group>"; };
+		2CE4282719BE845E003CB25A /* VERiceFieldTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VERiceFieldTransition.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,6 +172,8 @@
 		2CE4281B19BE7D24003CB25A /* VERiceFieldAnimation */ = {
 			isa = PBXGroup;
 			children = (
+				2CE4282619BE845E003CB25A /* VERiceFieldTransition.h */,
+				2CE4282719BE845E003CB25A /* VERiceFieldTransition.m */,
 			);
 			path = VERiceFieldAnimation;
 			sourceTree = SOURCE_ROOT;
@@ -277,6 +282,7 @@
 				2CE4282519BE833A003CB25A /* UINavigationController+Additions.m in Sources */,
 				2CE427F319BE7CE6003CB25A /* VEAppDelegate.m in Sources */,
 				2CE4281E19BE7D4F003CB25A /* DEMOMasterViewController.m in Sources */,
+				2CE4282819BE845E003CB25A /* VERiceFieldTransition.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

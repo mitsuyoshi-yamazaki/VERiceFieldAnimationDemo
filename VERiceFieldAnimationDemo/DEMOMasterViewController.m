@@ -8,9 +8,13 @@
 
 #import "DEMOMasterViewController.h"
 
+#import "VERiceFieldTransition.h"
+
 #import "DEMODetailViewController.h"
 
-@interface DEMOMasterViewController ()
+@interface DEMOMasterViewController () <UIViewControllerTransitioningDelegate>
+
+@property (nonatomic, weak) UIButton *selectedButton;
 
 - (NSString *)colorForTag:(NSInteger)tag;
 
@@ -39,17 +43,27 @@
 	return @[@"Gray", @"Green", @"Blue", @"Pink"][tag - 100];
 }
 
-#pragma mark - 
+#pragma mark - UIStoryboardSegue
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 	
-	UIButton *button = sender;
-	NSString *color = [self colorForTag:button.tag];
+	self.selectedButton = sender;
+	NSString *color = [self colorForTag:self.selectedButton.tag];
 	NSLog(@"%@ color", color);
 	
 	UINavigationController *navigationController = segue.destinationViewController;
+	navigationController.transitioningDelegate = self;
+
 	DEMODetailViewController *detailViewController = (DEMODetailViewController *)navigationController.topViewController;
-	detailViewController.view.backgroundColor = button.backgroundColor;
+	detailViewController.view.backgroundColor = self.selectedButton.backgroundColor;
 	detailViewController.title = color.uppercaseString;
+}
+
+#pragma mark - UIViewControllerTransitioningDelegate
+- (id <UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
+	
+	VERiceFieldTransition *transition = [[VERiceFieldTransition alloc] initWithFromRect:self.selectedButton.frame presenting:YES];
+	
+	return transition;
 }
 
 @end
