@@ -8,7 +8,11 @@
 
 #import "DEMOMasterViewController.h"
 
+#import "DEMODetailViewController.h"
+
 @interface DEMOMasterViewController ()
+
+- (NSString *)colorForTag:(NSInteger)tag;
 
 @end
 
@@ -24,6 +28,28 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (UIStatusBarStyle)preferredStatusBarStyle {
+	return UIStatusBarStyleDefault;
+}
+
+#pragma mark - Accessor
+- (NSString *)colorForTag:(NSInteger)tag {
+	return @[@"Gray", @"Green", @"Blue", @"Pink"][tag - 100];
+}
+
+#pragma mark - 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+	
+	UIButton *button = sender;
+	NSString *color = [self colorForTag:button.tag];
+	NSLog(@"%@ color", color);
+	
+	UINavigationController *navigationController = segue.destinationViewController;
+	DEMODetailViewController *detailViewController = (DEMODetailViewController *)navigationController.topViewController;
+	detailViewController.view.backgroundColor = button.backgroundColor;
+	detailViewController.title = color.uppercaseString;
 }
 
 @end
