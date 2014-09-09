@@ -13,7 +13,11 @@ typedef enum {
 	VERiceFieldTransitionDirectionBottom,
 	VERiceFieldTransitionDirectionLeft,
 	VERiceFieldTransitionDirectionRight,
+	VERiceFieldTransitionDirectionCount,
 }VERiceFieldTransitionDirection;
+
+#define isVERiceFieldTransitionVerticalDirection(a)		((a == VERiceFieldTransitionDirectionTop) || (a == VERiceFieldTransitionDirectionBottom))
+#define isVERiceFieldTransitionHorizontalDirection(a)	((a == VERiceFieldTransitionDirectionLeft) || (a == VERiceFieldTransitionDirectionRight))
 
 @interface VERiceFieldTransition ()
 
@@ -52,38 +56,65 @@ typedef enum {
 	UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
 
     UIView *containerView = [transitionContext containerView];
+	[containerView addSubview:toViewController.view];
 
     UIView *snapshotView = self.presenting ? [fromViewController.view snapshotViewAfterScreenUpdates:NO] : [toViewController.view snapshotViewAfterScreenUpdates:YES];
 
-	UIView *leftView = [self viewForDirection:VERiceFieldTransitionDirectionLeft snapshot:snapshotView];
-	CGRect leftOutFrame = [self viewOutFrameForDirection:VERiceFieldTransitionDirectionLeft rootViewSize:snapshotView.frame.size];
+	NSMutableDictionary *snapshots = [NSMutableDictionary dictionaryWithCapacity:VERiceFieldTransitionDirectionCount];
 	
-	UIView *topView = [self viewForDirection:VERiceFieldTransitionDirectionTop snapshot:snapshotView];
-	CGRect topOutFrame = [self viewOutFrameForDirection:VERiceFieldTransitionDirectionTop rootViewSize:snapshotView.frame.size];
-	
-	[containerView addSubview:toViewController.view];
-	
-	[containerView addSubview:leftView];
-	[containerView addSubview:topView];
+	for (NSInteger i = 0; i < VERiceFieldTransitionDirectionCount; i++) {
+
+		UIView *view = [self viewForDirection:i snapshot:snapshotView];
+		
+		[containerView addSubview:view];
+		snapshots[@(i)] = view;
+	}
 
 	NSTimeInterval duration = [self transitionDuration:transitionContext];
-
-	[UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+	CGSize rootViewSize = snapshotView.frame.size;
+	
+	void (^handleView)(BOOL isVertical, BOOL isAnimation) = ^(BOOL isVertical, BOOL isAnimation) {
 		
-		leftView.frame = leftOutFrame;
+		for (NSInteger i = 0; i < VERiceFieldTransitionDirectionCount; i++) {
+			
+			if (isVertical) {
+				if (isVERiceFieldTransitionHorizontalDirection(i)) {
+					continue;
+				}
+			}
+			else {
+				if (isVERiceFieldTransitionVerticalDirection(i)) {
+					continue;
+				}
+			}
+			
+			UIView *view = snapshots[@(i)];
+
+			if (isAnimation) {
+				view.frame = [self viewOutFrameForDirection:i rootViewSize:rootViewSize];
+			}
+			else {
+				[view removeFromSuperview];
+			}
+		}
+	};
+	
+	[UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+
+		handleView(NO, YES);
 		
 	} completion:^(BOOL finished) {
 		
-		[leftView removeFromSuperview];
+		handleView(NO, NO);
 		
 		[UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
 			
-			topView.frame = topOutFrame;
+			handleView(YES, YES);
 			
 		} completion:^(BOOL finished) {
 			
-			[topView removeFromSuperview];
-			
+			handleView(YES, NO);
+
 			BOOL completed = ![transitionContext transitionWasCancelled];
 			[transitionContext completeTransition:completed];
 			
@@ -117,17 +148,21 @@ typedef enum {
 			break;
 			
 		case VERiceFieldTransitionDirectionBottom:
-			
+			frame.origin.y = self.fromRect.origin.y + self.fromRect.size.height;
+			frame.size.width = size.width;
+			frame.size.height = size.height - frame.origin.y;
 			break;
 			
 		case VERiceFieldTransitionDirectionLeft:
 			frame = self.fromRect;
 			frame.origin.x = 0.0f;
-			frame.size.width = size.width - self.fromRect.origin.x;
+			frame.size.width = self.fromRect.origin.x;
 			break;
 			
 		case VERiceFieldTransitionDirectionRight:
-			
+			frame = self.fromRect;
+			frame.origin.x = self.fromRect.origin.x + self.fromRect.size.width;
+			frame.size.width = size.width - frame.origin.x;
 			break;
 			
 		default:
@@ -147,7 +182,7 @@ typedef enum {
 			break;
 			
 		case VERiceFieldTransitionDirectionBottom:
-			
+			frame.origin.y = size.height;
 			break;
 			
 		case VERiceFieldTransitionDirectionLeft:
@@ -155,7 +190,7 @@ typedef enum {
 			break;
 			
 		case VERiceFieldTransitionDirectionRight:
-			
+			frame.origin.x = size.width;
 			break;
 			
 		default:
