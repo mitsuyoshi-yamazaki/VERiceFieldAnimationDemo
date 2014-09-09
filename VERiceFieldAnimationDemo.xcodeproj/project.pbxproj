@@ -15,7 +15,6 @@
 		2CE427F319BE7CE6003CB25A /* VEAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE427F219BE7CE6003CB25A /* VEAppDelegate.m */; };
 		2CE427F619BE7CE6003CB25A /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE427F419BE7CE6003CB25A /* Main_iPhone.storyboard */; };
 		2CE427F919BE7CE6003CB25A /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE427F719BE7CE6003CB25A /* Main_iPad.storyboard */; };
-		2CE427FC19BE7CE6003CB25A /* VEViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CE427FB19BE7CE6003CB25A /* VEViewController.m */; };
 		2CE427FE19BE7CE6003CB25A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2CE427FD19BE7CE6003CB25A /* Images.xcassets */; };
 		2CE4280519BE7CE6003CB25A /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE4280419BE7CE6003CB25A /* XCTest.framework */; };
 		2CE4280619BE7CE6003CB25A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CE427E219BE7CE6003CB25A /* Foundation.framework */; };
@@ -47,8 +46,6 @@
 		2CE427F219BE7CE6003CB25A /* VEAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VEAppDelegate.m; sourceTree = "<group>"; };
 		2CE427F519BE7CE6003CB25A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		2CE427F819BE7CE6003CB25A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
-		2CE427FA19BE7CE6003CB25A /* VEViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VEViewController.h; sourceTree = "<group>"; };
-		2CE427FB19BE7CE6003CB25A /* VEViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VEViewController.m; sourceTree = "<group>"; };
 		2CE427FD19BE7CE6003CB25A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		2CE4280319BE7CE6003CB25A /* VERiceFieldAnimationDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = VERiceFieldAnimationDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CE4280419BE7CE6003CB25A /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -118,8 +115,7 @@
 				2CE427F219BE7CE6003CB25A /* VEAppDelegate.m */,
 				2CE427F419BE7CE6003CB25A /* Main_iPhone.storyboard */,
 				2CE427F719BE7CE6003CB25A /* Main_iPad.storyboard */,
-				2CE427FA19BE7CE6003CB25A /* VEViewController.h */,
-				2CE427FB19BE7CE6003CB25A /* VEViewController.m */,
+				2CE4281B19BE7D24003CB25A /* VERiceFieldAnimation */,
 				2CE427FD19BE7CE6003CB25A /* Images.xcassets */,
 				2CE427E919BE7CE6003CB25A /* Supporting Files */,
 			);
@@ -154,6 +150,13 @@
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
+		};
+		2CE4281B19BE7D24003CB25A /* VERiceFieldAnimation */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = VERiceFieldAnimation;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -255,7 +258,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2CE427EF19BE7CE6003CB25A /* main.m in Sources */,
-				2CE427FC19BE7CE6003CB25A /* VEViewController.m in Sources */,
 				2CE427F319BE7CE6003CB25A /* VEAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
