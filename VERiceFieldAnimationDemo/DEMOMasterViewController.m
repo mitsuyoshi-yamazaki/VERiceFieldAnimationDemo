@@ -40,7 +40,7 @@
 
 #pragma mark - Accessor
 - (NSString *)colorForTag:(NSInteger)tag {
-	return @[@"Gray", @"Green", @"Blue", @"Pink"][tag - 100];
+	return @[@"Yellow", @"Green", @"Blue", @"Red"][tag - 100];
 }
 
 #pragma mark - UIStoryboardSegue
@@ -62,7 +62,12 @@
 - (id <UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source {
 	
 	VERiceFieldTransition *transition = [[VERiceFieldTransition alloc] initWithFromRect:self.selectedButton.frame presenting:YES];
-	
+	return transition;
+}
+
+- (id <UIViewControllerAnimatedTransitioning>) animationControllerForDismissedController:(UIViewController *)dismissed
+{
+	VERiceFieldTransition *transition = [[VERiceFieldTransition alloc] initWithFromRect:self.selectedButton.frame presenting:NO];
 	return transition;
 }
 

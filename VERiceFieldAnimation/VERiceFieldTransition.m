@@ -25,6 +25,8 @@ typedef enum {
 @property (nonatomic, readonly, getter = isPresenting) BOOL presenting;
 
 - (UIView *)viewForDirection:(VERiceFieldTransitionDirection)direction snapshot:(UIView *)snapshot;
+- (CGRect)viewFromFrameForDirection:(VERiceFieldTransitionDirection)direction rootViewSize:(CGSize)size;
+- (CGRect)viewToFrameForDirection:(VERiceFieldTransitionDirection)direction rootViewSize:(CGSize)size;
 - (CGRect)viewFrameForDirection:(VERiceFieldTransitionDirection)direction rootViewSize:(CGSize)size;
 - (CGRect)viewOutFrameForDirection:(VERiceFieldTransitionDirection)direction rootViewSize:(CGSize)size;
 
@@ -56,10 +58,10 @@ typedef enum {
 	UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
 
     UIView *containerView = [transitionContext containerView];
-	[containerView addSubview:toViewController.view];
 
-    UIView *snapshotView = self.presenting ? [fromViewController.view snapshotViewAfterScreenUpdates:NO] : [toViewController.view snapshotViewAfterScreenUpdates:YES];
-
+//   UIView *snapshotView = self.presenting ? [fromViewController.view snapshotViewAfterScreenUpdates:NO] : [toViewController.view snapshotViewAfterScreenUpdates:YES];
+	UIView *snapshotView = [fromViewController.view snapshotViewAfterScreenUpdates:NO];
+	
 	NSMutableDictionary *snapshots = [NSMutableDictionary dictionaryWithCapacity:VERiceFieldTransitionDirectionCount];
 	
 	for (NSInteger i = 0; i < VERiceFieldTransitionDirectionCount; i++) {
@@ -91,7 +93,7 @@ typedef enum {
 			UIView *view = snapshots[@(i)];
 
 			if (isAnimation) {
-				view.frame = [self viewOutFrameForDirection:i rootViewSize:rootViewSize];
+				view.frame = [self viewToFrameForDirection:i rootViewSize:rootViewSize];
 			}
 			else {
 				[view removeFromSuperview];
@@ -99,27 +101,58 @@ typedef enum {
 		}
 	};
 	
-	[UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-
-		handleView(NO, YES);
-		
-	} completion:^(BOOL finished) {
-		
-		handleView(NO, NO);
+	if (self.isPresenting) {
+				
+		[containerView insertSubview:toViewController.view belowSubview:snapshots[@(0)]];
 		
 		[UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
 			
-			handleView(YES, YES);
+			handleView(NO, YES);
 			
 		} completion:^(BOOL finished) {
 			
-			handleView(YES, NO);
-
-			BOOL completed = ![transitionContext transitionWasCancelled];
-			[transitionContext completeTransition:completed];
+			handleView(NO, NO);
 			
+			[UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+				
+				handleView(YES, YES);
+				
+			} completion:^(BOOL finished) {
+				
+				handleView(YES, NO);
+				
+				BOOL completed = ![transitionContext transitionWasCancelled];
+				[transitionContext completeTransition:completed];
+				
+			}];
 		}];
-	}];
+	}
+	else {
+		
+		[UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+			
+			handleView(NO, YES);
+			
+		} completion:^(BOOL finished) {
+			
+			handleView(NO, NO);
+			
+			[UIView animateWithDuration:duration delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+				
+				handleView(YES, YES);
+				
+			} completion:^(BOOL finished) {
+				
+				handleView(YES, NO);
+				
+				[containerView addSubview:toViewController.view];
+				
+				BOOL completed = ![transitionContext transitionWasCancelled];
+				[transitionContext completeTransition:completed];
+				
+			}];
+		}];
+	}
 }
 
 - (void)animationEnded:(BOOL) transitionCompleted {
@@ -129,12 +162,32 @@ typedef enum {
 #pragma mark - Accessor
 - (UIView *)viewForDirection:(VERiceFieldTransitionDirection)direction snapshot:(UIView *)snapshot {
 
-	CGRect frame = [self viewFrameForDirection:direction rootViewSize:snapshot.frame.size];
+	CGRect frame = [self viewFromFrameForDirection:direction rootViewSize:snapshot.frame.size];
 	UIView *view = [snapshot resizableSnapshotViewFromRect:frame afterScreenUpdates:NO withCapInsets:UIEdgeInsetsZero];
 	
 	view.frame = frame;	// -resizableSnapshotViewFromRect:afterScreenUpdates:withCapInsets に渡しているframeはどうやらboundsとして処理されている（originが0,0になっている）ようなので
 	
 	return view;
+}
+
+- (CGRect)viewFromFrameForDirection:(VERiceFieldTransitionDirection)direction rootViewSize:(CGSize)size {
+	
+	if (self.isPresenting) {
+		return [self viewFrameForDirection:direction rootViewSize:size];
+	}
+	else {
+		return [self viewOutFrameForDirection:direction rootViewSize:size];
+	}
+}
+
+- (CGRect)viewToFrameForDirection:(VERiceFieldTransitionDirection)direction rootViewSize:(CGSize)size {
+	
+	if (self.isPresenting) {
+		return [self viewOutFrameForDirection:direction rootViewSize:size];
+	}
+	else {
+		return [self viewFrameForDirection:direction rootViewSize:size];
+	}
 }
 
 - (CGRect)viewFrameForDirection:(VERiceFieldTransitionDirection)direction rootViewSize:(CGSize)size {
@@ -175,27 +228,51 @@ typedef enum {
 - (CGRect)viewOutFrameForDirection:(VERiceFieldTransitionDirection)direction rootViewSize:(CGSize)size {
 	
 	CGRect frame = [self viewFrameForDirection:direction rootViewSize:size];
-	
+
 	switch (direction) {
 		case VERiceFieldTransitionDirectionTop:
-			frame.origin.y = - frame.size.height;
+			frame.size.height = 0.0f;
 			break;
 			
 		case VERiceFieldTransitionDirectionBottom:
+			frame.size.height = 0.0f;
 			frame.origin.y = size.height;
 			break;
 			
 		case VERiceFieldTransitionDirectionLeft:
-			frame.origin.x = - frame.size.width;
+			frame.size.width = 0.0f;
 			break;
 			
 		case VERiceFieldTransitionDirectionRight:
+			frame.size.width = 0.0f;
 			frame.origin.x = size.width;
 			break;
 			
 		default:
 			break;
 	}
+
+// screen外への移動frame
+//	switch (direction) {
+//		case VERiceFieldTransitionDirectionTop:
+//			frame.origin.y = - frame.size.height;
+//			break;
+//			
+//		case VERiceFieldTransitionDirectionBottom:
+//			frame.origin.y = size.height;
+//			break;
+//			
+//		case VERiceFieldTransitionDirectionLeft:
+//			frame.origin.x = - frame.size.width;
+//			break;
+//			
+//		case VERiceFieldTransitionDirectionRight:
+//			frame.origin.x = size.width;
+//			break;
+//			
+//		default:
+//			break;
+//	}
 	
 	return frame;
 }
